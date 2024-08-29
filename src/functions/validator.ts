@@ -27,6 +27,30 @@ export const validator = {
             .matches(passwordRegex).withMessage('mot de passe trop faible !')
         ,
     ],
+
+    validateUserUpdate: [
+        // Validation of user name
+        body('name')
+            .optional()
+            .isString().withMessage('le nom doit etre une chaine de caractere !')
+            .isLength({min:3}).withMessage('le nom est trop court !')
+            .isLength({max: 25}).withMessage('le nom est trop long !')
+        ,
+        // Validatoion of user email
+        body('email')
+            .optional()
+            .exists().withMessage('L\'email est requis !')
+            .trim().notEmpty().withMessage('l\'email ne doit pas etre vide !')
+            .isEmail().withMessage('Addresse email vailde !')
+        ,
+        // validation of user password
+        body('password')
+            .optional()
+            .exists().withMessage('Le mot de passe est requis !')
+            .trim().notEmpty().withMessage('mot de passe ne peut etre vide!')
+            .matches(passwordRegex).withMessage('mot de passe trop faible !')
+        ,
+    ],
     
     validateUserAtLogin: [
         // Validatoion of user email

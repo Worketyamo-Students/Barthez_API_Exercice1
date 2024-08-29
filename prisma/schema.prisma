@@ -14,9 +14,9 @@ datasource db {
 }
 
 model user {
-  user_id String   @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  email String @unique
+  user_id  String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String @unique
   password String
 
   // User can make one or many loands
@@ -30,28 +30,28 @@ model user {
 }
 
 model book {
-  book_id String   @id @default(auto()) @map("_id") @db.ObjectId
-  title String
-  author String
-  description String
+  book_id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  author        String
+  description   String
   publicateYear String
-  ISBN String?
-  
+  ISBN          String?
+
   state State @default(free)
 
   loan loan[]
 }
 
 model loan {
-  loan_id String   @id @default(auto()) @map("_id") @db.ObjectId
-  
+  loan_id String @id @default(auto()) @map("_id") @db.ObjectId
+
   userID String @db.ObjectId
-  user user @relation(fields: [userID], references: [user_id])
+  user   user   @relation(fields: [userID], references: [user_id])
 
   bookID String @db.ObjectId
-  book book @relation(fields: [bookID], references: [book_id])
+  book   book   @relation(fields: [bookID], references: [book_id])
 
-  loanDate DateTime
+  loanDate     DateTime
   returnedDate DateTime
 }
 

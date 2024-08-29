@@ -18,9 +18,9 @@ const usersControllers = {
     inscription: async (req: Request, res: Response) =>{
         try {
             // fetch data from body
-            const {name, email, password} = req.body;            
+            const {name, email, password, state} = req.body;            
             if(!name || !email || !password) return badRequest(res, "All fields are mandatory !");
-
+            
             // Check if user ever exist
             const userAlreadyExist = await prisma.user.findUnique({where: {email}})
             if(userAlreadyExist) return conflict(res, "Email is ever used !");
@@ -33,6 +33,7 @@ const usersControllers = {
                     name,
                     email,
                     password: hashPassword,
+                    state
                 }
             });
             if(!newUser) return notFound(res, "Error when creating new user !");
@@ -173,14 +174,14 @@ const usersControllers = {
             if(!user) return badRequest(res, "user not found !");
 
             // fetch data from body
-            const {name, email, password} = req.body;            
+            const {name, email, password, state} = req.body;            
             //! comment faire en sorte que les informations soient verifié indépendamment des autres;
 
             const hashPassword = await hashText(password);
 
             const updateuser = await prisma.user.update({
                 where: {user_id: userID},
-                data: { name, email, password: hashPassword },
+                data: { name, email, password: hashPassword, state },
                 select: { name: true, email: true}
             });
             if(!updateuser) return notFound(res, "error when update user !");
