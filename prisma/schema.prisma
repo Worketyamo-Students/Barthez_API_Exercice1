@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  user_id String   @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  email String @unique
+  password String
+
+  // User can make one or many loands
+  loans loan[]
+
+  // User can't make more than this loand
+  max_loans Int @default(0)
+
+  // user can be admin or simple visitor
+  state Title @default(visitor)
+}
+
+model book {
+  book_id String   @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  author String
+  description String
+  publicateYear String
+  ISBN String?
+  
+  state State @default(free)
+
+  loan loan[]
+}
+
+model loan {
+  loan_id String   @id @default(auto()) @map("_id") @db.ObjectId
+  
+  userID String @db.ObjectId
+  user user @relation(fields: [userID], references: [user_id])
+
+  bookID String @db.ObjectId
+  book book @relation(fields: [bookID], references: [book_id])
+
+  loanDate DateTime
+  returnedDate DateTime
+}
+
+enum State {
+  free
+  loan
+}
+
+enum Title {
+  admin
+  visitor
+}
